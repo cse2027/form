@@ -104,38 +104,33 @@
   <footer>© 2025 by UCSC</footer>
 
 <script>
-  const form = document.getElementById('submit-form');
-  const responseBox = document.getElementById('response');
+  const form = document.getElementById("cohortForm");
 
-  form.addEventListener('submit', function(e) {
+  form.addEventListener("submit", async function (e) {
     e.preventDefault();
+
     const formData = new FormData(form);
     const params = new URLSearchParams();
     for (const pair of formData.entries()) {
       params.append(pair[0], pair[1]);
     }
 
-    fetch('https://script.google.com/macros/s/AKfycbxOZfyPTYxUhvBOTeiItJDnzfr2CFgoz8L8GbOx0O9oUFUT4b0raorMnWtLqhlMwJlV/exec', {
-      method: 'POST',
-      body: params
-    })
-    .then(response => response.text())
-    .then(data => {
-      if (data.toLowerCase().includes("success")) {
-        responseBox.innerText = "✔️ Your response has been recorded successfully!";
-        responseBox.style.color = "green";
-        form.reset();
-      } else {
-        throw new Error("Unexpected response: " + data);
-      }
-    })
-    .catch(error => {
-      responseBox.innerText = "⚠️ Your form was submitted.";
-      responseBox.style.color = "orange";
-      console.error("Form submission error:", error);
-    });
+    try {
+      await fetch("https://script.google.com/macros/s/AKfycbxtLgKce9McFToaf9j1wg6GNRNrflAzQJlfUaea70IjEcEJwY0CmQTDejB96C9zF-U/exec", {
+        method: "POST",
+        mode: "no-cors", // enables submission without CORS issues
+        body: params
+      });
+
+      alert("Submitted successfully!");
+      form.reset();
+    } catch (error) {
+      alert("Submission failed. Please try again.");
+      console.error("Error:", error);
+    }
   });
 </script>
+
 
 </body>
 </html>
